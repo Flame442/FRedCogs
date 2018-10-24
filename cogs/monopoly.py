@@ -20,20 +20,28 @@ class Monopoly:
 			while i == 0:
 				try:
 					num = await self.bot.wait_for_message(timeout=60, author=id[1], channel=channel)
-					num = int(num.content)
-					if num < 2 or num > 8: #2-8 player game
-						await self.bot.say('Please select a number between 2 and 8')
-					else:
-						numalive = num #set number of players still in the game for later
-						i = 1 #leave loop
+					if num.content = 'test':
+						num = 2
+						numalive = 2
+						id.apppend(ctx.message.author)
+						name.append(str(ctx.message.author)[:-5])
+						i = 1
+					else: #unindent everything to remove test case
+						num = int(num.content)
+						if num < 2 or num > 8: #2-8 player game
+							await self.bot.say('Please select a number between 2 and 8')
+						else:
+							numalive = num #set number of players still in the game for later
+							i = 1 #leave loop
 				except: #not a number
 					await self.bot.say('Please select a number between 2 and 8')
-			for a in range(2,num+1):
-				check = lambda m: m.author not in id and m.author.bot == False
-				await self.bot.say('Player '+str(a)+', say I')
-				r = await self.bot.wait_for_message(timeout=60, check=check, channel=channel)
-				name.append(str(r.author)[:-5])
-				id.append(r.author)
+			if id[1] != id[2]: #unendent everything to remove test case
+				for a in range(2,num+1):
+					check = lambda m: m.author not in id and m.author.bot == False
+					await self.bot.say('Player '+str(a)+', say I')
+					r = await self.bot.wait_for_message(timeout=60, check=check, channel=channel)
+					name.append(str(r.author)[:-5])
+					id.append(r.author)
 
 			async def configdict(filename): #convert content of config-file into dictionary.
 				with open(filename, "r") as f:
@@ -485,6 +493,8 @@ class Monopoly:
 										ownedby[i] = 0
 										numhouse[i] = 0
 										ismortgaged[i] = 0
+										global numalive
+										numalive -= 1
 								alive[p] = False
 								await self.bot.say(name[p]+' is now out of the game.')
 							elif choice == 'n':
@@ -743,7 +753,7 @@ class Monopoly:
 						bal[p] += 200
 						await self.bot.say('You passed go, you now have $'+str(bal[p]))
 						tile[p] = 12 
-					await self.bot.say('You are now at '+name[tile[p]])
+					await self.bot.say('You are now at '+tilename[tile[p]])
 					if ownedby[tile[p]] == 0 and bal[p] >= pricebuy[tile[p]]:
 						await self.bot.say('Would you like to buy '+tilename[tile[p]]+' for $'+str(pricebuy[tile[p]])+'? (y/n) You have $'+str(bal[p])+'.')
 						a = 0
@@ -1052,14 +1062,14 @@ class Monopoly:
 
 			async def debug(): #print debug info
 				db = 0 #manual switch
-				await self.bot.say('id','price','owner','ism','mprice','numh','hprice','name') 
+				await self.bot.say('id price owner ism mprice numh hprice name') 
 				a = 0
 				while a < 40:
 					await self.bot.say('{:2d} {:5d} {:5d} {:3d} {:6d} {:4d} {:6d} {}'.format(a,pricebuy[a],ownedby[a],ismortgaged[a],mortgageprice[a],numhouse[a],houseprice[a],tilename[a]))
 					if db == 1:
 						b = 0
 						while b < 6:
-							await self.bot.say('house',b,'=',rentprice[6*a+b])
+							await self.bot.say('house '+str(b)' = '+str(rentprice[6*a+b]))
 							b += 1
 					a += 1
 				await self.bot.say(bal[1:])
@@ -1074,7 +1084,7 @@ class Monopoly:
 					autosave = ('name = '+str(name)+'\ntilename = '+str(tilename)+'\ninjail = '+str(injail)+'\ntile = '+str(tile)+'\nbal = '+str(bal)+'\np = '+str(p)+'\nownedby = '+str(ownedby)+'\nnumhouse = '+str(numhouse)+'\nismortgaged = '+str(ismortgaged)+'\ngoojf = '+str(goojf)+'\nalive = '+str(alive)+'\njailturn ='+str(jailturn))
 					await turn()
 				p += 1
-			for o in range(9):
+			for o in range(1,num+1):
 				if alive[o]:
 					await self.bot.say(name[o]+' wins!')
 			await self.bot.say('\nDebug information\n')
