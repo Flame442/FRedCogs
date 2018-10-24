@@ -20,10 +20,10 @@ class Monopoly:
 			while i == 0:
 				try:
 					num = await self.bot.wait_for_message(timeout=60, author=id[1], channel=channel)
-					if num.content = 'test':
+					if num.content == 'test':
 						num = 2
 						numalive = 2
-						id.apppend(ctx.message.author)
+						id.append(ctx.message.author)
 						name.append(str(ctx.message.author)[:-5])
 						i = 1
 					else: #unindent everything to remove test case
@@ -35,7 +35,7 @@ class Monopoly:
 							i = 1 #leave loop
 				except: #not a number
 					await self.bot.say('Please select a number between 2 and 8')
-			if id[1] != id[2]: #unendent everything to remove test case
+			if id[1] != id[2]: #unindent everything to remove test case
 				for a in range(2,num+1):
 					check = lambda m: m.author not in id and m.author.bot == False
 					await self.bot.say('Player '+str(a)+', say I')
@@ -71,7 +71,7 @@ class Monopoly:
 					cfgdict[key] = value #put in dictionary
 				return cfgdict
 			try:
-				configdict('data/monopoly/save.txt') 
+				await configdict('data/monopoly/save.txt') 
 				await self.bot.say('Use save file? (y/n)')
 				useSave = await self.bot.wait_for_message(timeout=60, author=id[1], channel=channel)
 				if useSave.content != 'y':
@@ -99,7 +99,7 @@ class Monopoly:
 				alive = [-1, True, True, True, True, True, True, True, True]
 				jailturn = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
 				try:
-					configdict('data/monopoly/settings.txt')
+					cfgdict = await configdict('data/monopoly/settings.txt')
 					if cfgdict['propName'] == 1: #british
 						tilename = ['Go', 'Old Kent Road', 'Community Chest', 'Whitechapel Road', 'Income Tax', 'King\'s Cross Staton', 'The Angel Islington', 'Chance', 'Euston Road', 'Pentonville Road', 'Jail', 'Pall Mall', 'Electric Company', 'Whitehall', 'Northumrl\'d Avenue', 'Marylebone Station', 'Bow Street', 'Community Chest', 'Marlborough Street', 'Vine Street', 'Free Parking', 'Strand', 'Chance', 'Fleet Street', 'Trafalgar Square', 'Fenchurch Station', 'Leicester Square', 'Conventry Street', 'Water Works', 'Piccadilly', 'Go To Jail', 'Regent Street', 'Oxford Street', 'Community Chest', 'Bond Street', 'Liverpool St. Station', 'Chance', 'Park Lane', 'Super Tax', 'Mayfair']
 					elif cfgdict['propName'] == 2: #american
@@ -112,7 +112,7 @@ class Monopoly:
 					with open('data/monopoly/settings.txt', 'w') as f:
 						f.write('#Settings for Monopoly by Flame442\n\n#What property names to use (default 2)\n#1 = British\n#2 = US\n#3 = Custom\n\npropName = 2\n\n#If propName is set to Custom, these names will be used (default British names)\n#0-39 for every property in order starting at go\n\n 0 = Go\n 1 = Old Kent Road\n 2 = Community Chest\n 3 = Whitechapel Road\n 4 = Income Tax\n 5 = King\'s Cross Station\n 6 = The Angel Islington\n 7 = Chance\n 8 = Euston Road\n 9 = Pentonville Road\n10 = Jail\n11 = Pall Mall\n12 = Electric Company\n13 = Whitehall\n14 = Northumrl\'d Avenue\n15 = Marylebone Station\n16 = Bow Street\n17 = Community Chest\n18 = Marlborough Street\n19 = Vine Street\n20 = Free Parking\n21 = Strand\n22 = Chance\n23 = Fleet Street\n24 = Trafalgar Square\n25 = Fenchurch Station\n26 = Leicester Square\n27 = Conventry Street\n28 = Water Works\n29 = Piccadilly\n30 = Go To Jail\n31 = Regent Street\n32 = Oxford Street\n33 = Community Chest\n34 = Bond Street\n35 = Liverpool St. Station\n36 = Chance\n37 = Park Lane\n38 = Super Tax\n39 = Mayfair')
 					await self.bot.say("No config file read, so one was created")
-					configdict('data/monopoly/settings.txt')
+					await configdict('data/monopoly/settings.txt')
 					tilename = ['Go', 'Mediterranean Avenue', 'Community Chest', 'Baltic Avenue', 'Income Tax', 'Reading Rainbow', 'Oriental Avenue', 'Chance', 'Vermont Avenue', 'Connecticut Avenue', 'Jail', 'St. Charles Place', 'Electric Company', 'States Avenue', 'States Avenue', 'Pennsylvania Railroad', 'St. James Place', 'Community Chest', 'Tennessee Avenue', 'New York Avenue', 'Free Parking', 'Kentucky Avenue', 'Chance', 'Indiana Avenue', 'Illinois Avenue', 'B&O Railroad', 'Atlantic Avenue', 'Ventnor Avenue', 'Water Works', 'Marvin Gardens', 'Go To Jail', 'Pacific Avenue', 'North Carolina Avenue', 'Community Chest', 'Pennsylvania Avenue', 'Short Line', 'Chance', 'Park Place', 'Luxury Tax', 'Boardwalk']
 			pricebuy = [-1, 60, -1, 60, -1, 200, 100, -1, 100, 120, -1, 140, 150, 140, 160, 200, 180, -1, 180, 200, -1, 220, -1, 220, 240, 200, 260, 260, 150, 280, -1, 300, 300, -1, 320, 200, -1, 350, -1, 400]
 			rentprice = [-1, -1, -1, -1, -1, -1, 2, 10, 30, 90, 160, 250, -1, -1, -1, -1, -1, -1, 4, 20, 60, 180, 360, 450, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6, 30, 90, 270, 400, 550, -1, -1, -1, -1, -1, -1, 6, 30, 90, 270, 400, 550, 8, 40, 100, 300, 450, 600, -1, -1, -1, -1, -1, -1, 10, 50, 150, 450, 625, 750, -1, -1, -1, -1, -1, -1, 10, 50, 150, 450, 625, 750, 12, 60, 180, 500, 700, 900, -1, -1, -1, -1, -1, -1, 14, 70, 200, 550, 750, 950, -1, -1, -1, -1, -1, -1, 14, 70, 200, 550, 750, 950, 16, 80, 220, 600, 800, 1000, -1, -1, -1, -1, -1, -1, 18, 90, 250, 700, 875, 1050, -1, -1, -1, -1, -1, -1, 10, 90, 250, 700, 875, 1050, 20, 100, 300, 750, 925, 1100, -1, -1, -1, -1, -1, -1, 22, 110, 330, 800, 975, 1150, 22, 110, 330, 800, 975, 1150, -1, -1, -1, -1, -1, -1, 22, 120, 360, 850, 1025, 1200, -1, -1, -1, -1, -1, -1, 26, 130, 390, 900, 1100, 1275, 26, 130, 390, 900, 1100, 1275, -1, -1, -1, -1, -1, -1, 28, 150, 450, 1000, 1200, 1400, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 35, 175, 500, 1100, 1300, 1500, -1, -1, -1, -1, -1, -1, 50, 200, 600, 1400, 1700, 2000]
@@ -153,22 +153,24 @@ class Monopoly:
 				tradeidn = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 				ptotrade = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 				ntotrade = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+				hold = ''
 				while a < 9:
 					if a <= num:
 						if a == p or not alive[a]: #can't trade with yourself or dead players
 							a += 1
 							continue
 						else:
-							await self.bot.say(str(a)+' '+name[a]) #print name if tradeable
+							hold += str(a)+' '+name[a]+'\n' #print name if tradeable
 							a += 1
 							continue
 					else:
 						break
+				await self.bot.say('```'+hold.strip()+'```')
 				i = 0
 				while i != 1:
 					try:
 						tradep = await self.bot.wait_for_message(timeout=60, author=id[p], channel=channel) #select the number of the player to trade
-						tradep = int(tradp.content)
+						tradep = int(tradep.content)
 						if 1 <= tradep <= num and tradep != p and alive[tradep] == True: #make sure the number is a player, is not the person starting the trade, and is alive
 							i = 1
 						else:
@@ -183,21 +185,20 @@ class Monopoly:
 						pti += 1
 					a += 1
 				while i == 1:
-					await self.bot.say('id sel name')
+					hold = 'id sel name\n'
 					a = 1
 					while a < pti:
 						if ptotrade[tradeidp[a]] == 1: #if already selected
-							await self.bot.say(str(a)+'  +   '+tilename[tradeidp[a]])
+							hold += str(a)+'  +   '+tilename[tradeidp[a]]+'\n'
 						else:
-							await self.bot.say(str(a)+'      '+tilename[tradeidp[a]])
+							hold += str(a)+'      '+tilename[tradeidp[a]]+'\n'
 						a += 1
-					await self.bot.say('$'+str(monp)) #money trade
+					hold += '$'+str(monp)+'\n' #money trade
 					if jp == 1: #plural test
-						await self.bot.say(str(jp)+' get out of jail free card')
+						hold += str(jp)+' get out of jail free card'
 					elif jp != 0:
-						await self.bot.say(str(jp)+' get out of jail free cards')
-					await self.bot.say('')
-					await self.bot.say('Type the number of the properties you want to give, "m" to give money, "j" to give get out of jail free cards, and "d" when you are done')
+						hold += str(jp)+' get out of jail free cards'
+					await self.bot.say('```'+hold.strip()+'```\nType the number of the properties you want to give, "m" to give money, "j" to give get out of jail free cards, and "d" when you are done')
 					t = await self.bot.wait_for_message(timeout=60, author=id[p], channel=channel)
 					t = t.content
 					try: #swap select/deselect property if valid number
@@ -242,21 +243,20 @@ class Monopoly:
 						nti += 1
 					a += 1
 				while i == 2:
-					await self.bot.say('id sel name')
+					hold = 'id sel name\n'
 					a = 1
 					while a < nti:
 						if ntotrade[tradeidn[a]] == 1:
-							await self.bot.say(str(a)+'  +   '+tilename[tradeidn[a]])
+							hold += str(a)+'  +   '+tilename[tradeidn[a]]+'\n'
 						else:
-							await self.bot.say(str(a)+'      '+tilename[tradeidn[a]])
+							hold += str(a)+'      '+tilename[tradeidn[a]]+'\n'
 						a += 1
-					await self.bot.say('$'+str(monn))
+					hold += '$'+str(monn)+'\n'
 					if jn == 1:
-						await self.bot.say(str(jn)+' get out of jail free card')
+						hold += str(jn)+' get out of jail free card'
 					elif jn != 0:
-						await self.bot.say(str(jn)+' get out of jail free cards')
-					await self.bot.say('')
-					await self.bot.say('Type the number of the properties you want to take, "m" to take money, "j" to take get out of jail free cards, and "d" when you are done')
+						hold == str(jn)+' get out of jail free cards'
+					await self.bot.say('```'+hold.strip()+'```\nType the number of the properties you want to take, "m" to take money, "j" to take get out of jail free cards, and "d" when you are done')
 					t = await self.bot.wait_for_message(timeout=60, author=id[p], channel=channel)
 					t = t.content
 					try:
@@ -296,28 +296,29 @@ class Monopoly:
 							continue
 				await self.bot.say('Confirm with y or quit with n\n\nYou will give:')
 				a = 1
+				hold = ''
 				while a < pti:
 					if ptotrade[tradeidp[a]] == 1: #print selected properties
-						await self.bot.say(tilename[tradeidp[a]])
+						hold += tilename[tradeidp[a]]+'\n'
 					a += 1
-				await self.bot.say('$'+str(monp))
+				hold += '$'+str(monp)+'\n'
 				if jp == 1:
-					await self.bot.say(str(jp)+' get out of jail free card')
+					hold += str(jp)+' get out of jail free card'
 				elif jp != 0:
-					await self.bot.say(str(jp)+' get out of jail free cards')
-				await self.bot.say('')
-				await self.bot.say('You will get:')
+					hold += str(jp)+' get out of jail free cards'
+				await self.bot.say('```'+hold.strip()+'```\nYou will get:')
+				hold = ''
 				a = 1
 				while a < nti:
 					if ntotrade[tradeidn[a]] == 1:
-						await self.bot.say(tilename[tradeidn[a]])
+						hold += tilename[tradeidn[a]]+'\n'
 					a += 1
-				await self.bot.say('$'+str(monn))
+				hold += '$'+str(monn)+'\n'
 				if jn == 1:
-					await self.bot.say(str(jn)+' get out of jail free card')
+					hold += str(jn)+' get out of jail free card'
 				elif jn != 0:
-					await self.bot.say(str(jn)+' get out of jail free cards')
-				await self.bot.say('')
+					hold += str(jn)+' get out of jail free cards'
+				await self.bot.say('```'+hold.strip()+'```')
 				while i == 3:
 					a = await self.bot.wait_for_message(timeout=60, author=id[p], channel=channel)
 					a = a.content 
@@ -328,30 +329,31 @@ class Monopoly:
 					else:
 						await self.bot.say('Select y or n')
 				if i == 4:
-					await self.bot.say(name[tradep]+'\'s turn!\n'+name[p]+' would like to trade with you. Here is their offer.\nAccept with y or deny with n.\n\nYou will get:')
+					await self.bot.say(name[tradep]+',\n'+name[p]+' would like to trade with you. Here is their offer.\nAccept with y or deny with n.\n\nYou will get:')
 					a = 1
+					hold = ''
 					while a < pti:
 						if ptotrade[tradeidp[a]] == 1:
-							await self.bot.say(tilename[tradeidp[a]])
+							hold += tilename[tradeidp[a]]+'\n'
 						a += 1
-					await self.bot.say('$'+str(monp))
+					hold += '$'+str(monp)+'\n'
 					if jp == 1:
-						await self.bot.say(str(jp)+' get out of jail free card')
+						hold += str(jp)+' get out of jail free card'
 					elif jp != 0:
-						await self.bot.say(str(jp)+' get out of jail free cards')
-					await self.bot.say('')
-					await self.bot.say('You will give:')
+						hold += str(jp)+' get out of jail free cards'
+					await self.bot.say('```'+hold.strip()+'```\nYou will give:')
 					a = 1
+					hold = ''
 					while a < nti:
 						if ntotrade[tradeidn[a]] == 1:
-							await self.bot.say(tilename[tradeidn[a]])
+							hold += tilename[tradeidn[a]]+'\n'
 						a += 1
-					await self.bot.say('$'+str(monn))
+					hold += '$'+str(monn)+'\n'
 					if jn == 1:
-						await self.bot.say(str(jn)+' get out of jail free card')
+						hold += str(jn)+' get out of jail free card'
 					elif jn != 1:
-						await self.bot.say(str(jn)+' get out of jail free cards')
-					await self.bot.say('')
+						hold += str(jn)+' get out of jail free cards'
+					await self.bot.say('```'+hold.strip()+'```')
 					while i == 4:
 						a = await self.bot.wait_for_message(timeout=60, author=id[tradep], channel=channel)
 						a = a.content
@@ -380,7 +382,7 @@ class Monopoly:
 						if ntotrade[tradeidn[a]] == 1:
 							ownedby[tradeidn[a]] = p
 						a += 1
-				await self.bot.say('Back to '+name[p]+'\'s turn!')
+				await self.bot.say('Back to '+name[p]+'\'s turn')
 				
 			async def roll(): #rolls d1 and d2 (1-6) and prints if 'doubles'
 				global d1
@@ -503,7 +505,8 @@ class Monopoly:
 								await self.bot.say('Select one of the options')
 					else:
 						await self.bot.say('Select one of the options')
-				await self.bot.say('You are now out of debt. You now have $'+str(bal[p]))
+				if alive[p]:
+					await self.bot.say('You are now out of debt. You now have $'+str(bal[p]))
 
 			async def mortgage(): #mortgage properties 
 				mid = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -515,14 +518,16 @@ class Monopoly:
 				i = 0
 				while i == 0:
 					a = 1
-					await self.bot.say('Select the property you want to mortgage\nid isM price name')
+					await self.bot.say('Select the property you want to mortgage')
+					hold = 'id isM price name'
 					while a < mi:
 						if monopolytest(a,'h') == False: #cannot morgage a property in a color group with houses because houses can only be built on full monopolies
 							if ismortgaged[mid[a]] == 1:
-								await self.bot.say('{:2}   + {:5d} {}'.format(a,mortgageprice[mid[a]],tilename[mid[a]]))
+								hold += '{:2}   + {:5d} {}'.format(a,mortgageprice[mid[a]],tilename[mid[a]])+'\n'
 							else:
-								await self.bot.say('{:2}     {:5d} {}'.format(a,mortgageprice[mid[a]],tilename[mid[a]]))
+								hold += '{:2}     {:5d} {}'.format(a,mortgageprice[mid[a]],tilename[mid[a]])+'\n'
 						a += 1
+					await self.bot.say('```'+hold.strip()+'```')
 					t = await self.bot.wait_for_message(timeout=60, author=id[p], channel=channel)
 					t = t.content
 					try:
@@ -588,10 +593,12 @@ class Monopoly:
 								hid[hi] = x
 								hi += 1
 					a = 1
-					await self.bot.say('Select the color groups to buy houses\nid numh price name')
+					await self.bot.say('Select the color groups to buy houses')
+					hold = 'id numh price name'
 					while a < hi:
-						await self.bot.say('{:2} {:4} {:5d} {}'.format(a,numhouse[hid[a]],houseprice[hid[a]],color[hid[a]]))
+						hold += '{:2} {:4} {:5d} {}'.format(a,numhouse[hid[a]],houseprice[hid[a]],color[hid[a]])+'\n'
 						a += 1
+					await self.bot.say('```'+hold.strip()+'```')
 					i = 0
 					while i == 0:
 						t = await self.bot.wait_for_message(timeout=60, author=id[p], channel=channel)
@@ -1061,18 +1068,18 @@ class Monopoly:
 						await house()
 
 			async def debug(): #print debug info
-				db = 0 #manual switch
-				await self.bot.say('id price owner ism mprice numh hprice name') 
 				a = 0
-				while a < 40:
-					await self.bot.say('{:2d} {:5d} {:5d} {:3d} {:6d} {:4d} {:6d} {}'.format(a,pricebuy[a],ownedby[a],ismortgaged[a],mortgageprice[a],numhouse[a],houseprice[a],tilename[a]))
-					if db == 1:
-						b = 0
-						while b < 6:
-							await self.bot.say('house '+str(b)' = '+str(rentprice[6*a+b]))
-							b += 1
+				hold = 'id price owner ism mprice numh hprice name'
+				while a < 20:
+					hold += '{:2d} {:5d} {:5d} {:3d} {:6d} {:4d} {:6d} {}'.format(a,pricebuy[a],ownedby[a],ismortgaged[a],mortgageprice[a],numhouse[a],houseprice[a],tilename[a])+'\n'
 					a += 1
-				await self.bot.say(bal[1:])
+				hold += str(bal[1:])
+				await self.bot.say('```'+hold.strip()+'```')
+				hold = 'id price owner ism mprice numh hprice name'
+				while a < 40:
+					hold += '{:2d} {:5d} {:5d} {:3d} {:6d} {:4d} {:6d} {}'.format(a,pricebuy[a],ownedby[a],ismortgaged[a],mortgageprice[a],numhouse[a],houseprice[a],tilename[a])+'\n'
+					a += 1
+				await self.bot.say('```'+hold.strip()+'```')
 
 			#start of run code
 			global p
@@ -1089,8 +1096,7 @@ class Monopoly:
 					await self.bot.say(name[o]+' wins!')
 			await self.bot.say('\nDebug information\n')
 			await debug()
-			await self.bot.say('\nSave information\n')
-			await self.bot.say(autosave)
+			await self.bot.say('\nSave information\n\n'+autosave)
 		except:
 			#await self.bot.say(autosave)
 			raise
