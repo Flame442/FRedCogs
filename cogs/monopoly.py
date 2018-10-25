@@ -31,6 +31,7 @@ class Monopoly:
 						if num < 2 or num > 8: #2-8 player game
 							await self.bot.say('Please select a number between 2 and 8')
 						else:
+							global numalive
 							numalive = num #set number of players still in the game for later
 							i = 1 #leave loop
 				except: #not a number
@@ -76,6 +77,7 @@ class Monopoly:
 				useSave = await self.bot.wait_for_message(timeout=60, author=id[1], channel=channel)
 				if useSave.content != 'y':
 					raise TypeError('Don\'t Save')
+				global injail,tile,bal,p,ownedby,numhouse,ismortgaged,goojf,alive,jailturn
 				name = cfgdict['name']
 				tilename = cfgdict['tilename']
 				bal = cfgdict['bal']
@@ -117,6 +119,7 @@ class Monopoly:
 			pricebuy = [-1, 60, -1, 60, -1, 200, 100, -1, 100, 120, -1, 140, 150, 140, 160, 200, 180, -1, 180, 200, -1, 220, -1, 220, 240, 200, 260, 260, 150, 280, -1, 300, 300, -1, 320, 200, -1, 350, -1, 400]
 			rentprice = [-1, -1, -1, -1, -1, -1, 2, 10, 30, 90, 160, 250, -1, -1, -1, -1, -1, -1, 4, 20, 60, 180, 360, 450, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6, 30, 90, 270, 400, 550, -1, -1, -1, -1, -1, -1, 6, 30, 90, 270, 400, 550, 8, 40, 100, 300, 450, 600, -1, -1, -1, -1, -1, -1, 10, 50, 150, 450, 625, 750, -1, -1, -1, -1, -1, -1, 10, 50, 150, 450, 625, 750, 12, 60, 180, 500, 700, 900, -1, -1, -1, -1, -1, -1, 14, 70, 200, 550, 750, 950, -1, -1, -1, -1, -1, -1, 14, 70, 200, 550, 750, 950, 16, 80, 220, 600, 800, 1000, -1, -1, -1, -1, -1, -1, 18, 90, 250, 700, 875, 1050, -1, -1, -1, -1, -1, -1, 10, 90, 250, 700, 875, 1050, 20, 100, 300, 750, 925, 1100, -1, -1, -1, -1, -1, -1, 22, 110, 330, 800, 975, 1150, 22, 110, 330, 800, 975, 1150, -1, -1, -1, -1, -1, -1, 22, 120, 360, 850, 1025, 1200, -1, -1, -1, -1, -1, -1, 26, 130, 390, 900, 1100, 1275, 26, 130, 390, 900, 1100, 1275, -1, -1, -1, -1, -1, -1, 28, 150, 450, 1000, 1200, 1400, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 35, 175, 500, 1100, 1300, 1500, -1, -1, -1, -1, -1, -1, 50, 200, 600, 1400, 1700, 2000]
 			rrprice = [0, 25, 50, 100, 200]
+			global ccorder, chanceorder, ccn, chancen
 			ccorder = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 			shuffle(ccorder)
 			ccn = 0
@@ -128,6 +131,7 @@ class Monopoly:
 			mortgageprice = [-1, 50, -1, 50, -1, 100, 50, -1, 50, 60, -1, 70, 75, 70, 80, 100, 90, -1, 90, 100, -1, 110, -1, 110, 120, 100, 140, 140, 75, 150, -1, 200, 200, -1, 200, 100, -1, 175, -1, 200]
 			tenmortgageprice = [-1, 55, -1, 55, -1, 110, 55, -1, 55, 66, -1, 77, 83, 77, 88, 110, 99, -1, 99, 110, -1, 121, -1, 121, 132, 110, 154, 154, 83, 165, -1, 220, 220, -1, 220, 110, -1, 188, -1, 220]
 			houseprice = [-1, 30, -1, 30, -1, -1, 50, -1, 50, 50, -1, 100, -1, 100, 100, -1, 100, -1, 100, 100, -1, 150, -1, 150, 150, -1, 150, 150, -1, 150, -1, 150, 150, -1, 150, -1, -1, 200, -1, 200]
+			global autosave
 			autosave = ''
 
 			def monopolytest(t,test): #tests if prop in monopoly or any properties in color group has houses
@@ -519,7 +523,7 @@ class Monopoly:
 				while i == 0:
 					a = 1
 					await self.bot.say('Select the property you want to mortgage')
-					hold = 'id isM price name'
+					hold = 'id isM price name\n'
 					while a < mi:
 						if monopolytest(a,'h') == False: #cannot morgage a property in a color group with houses because houses can only be built on full monopolies
 							if ismortgaged[mid[a]] == 1:
@@ -924,7 +928,7 @@ class Monopoly:
 					tile[p] -= 40
 					bal[p] += 200
 					await self.bot.say('You passed go! You now have $'+str(bal[p]))
-				landnd()
+				await landnd()
 
 			async def landnd(): #affecting properties
 				await self.bot.say(name[p]+' landed at '+tilename[tile[p]])
