@@ -26,6 +26,7 @@ class Monopoly:
 						id.append(ctx.message.author)
 						name.append(str(ctx.message.author)[:-5])
 						i = 1
+						hold = 0
 					else: #unindent everything to remove test case
 						num = int(num.content)
 						if num < 2 or num > 8: #2-8 player game
@@ -34,9 +35,10 @@ class Monopoly:
 							global numalive
 							numalive = num #set number of players still in the game for later
 							i = 1 #leave loop
+							hold = 1
 				except: #not a number
 					await self.bot.say('Please select a number between 2 and 8')
-			if id[1] != id[2]: #unindent everything to remove test case
+			if hold == 1: #unindent everything to remove test case
 				for a in range(2,num+1):
 					check = lambda m: m.author not in id and m.author.bot == False
 					await self.bot.say('Player '+str(a)+', say I')
@@ -105,7 +107,7 @@ class Monopoly:
 					if cfgdict['propName'] == 1: #british
 						tilename = ['Go', 'Old Kent Road', 'Community Chest', 'Whitechapel Road', 'Income Tax', 'King\'s Cross Staton', 'The Angel Islington', 'Chance', 'Euston Road', 'Pentonville Road', 'Jail', 'Pall Mall', 'Electric Company', 'Whitehall', 'Northumrl\'d Avenue', 'Marylebone Station', 'Bow Street', 'Community Chest', 'Marlborough Street', 'Vine Street', 'Free Parking', 'Strand', 'Chance', 'Fleet Street', 'Trafalgar Square', 'Fenchurch Station', 'Leicester Square', 'Conventry Street', 'Water Works', 'Piccadilly', 'Go To Jail', 'Regent Street', 'Oxford Street', 'Community Chest', 'Bond Street', 'Liverpool St. Station', 'Chance', 'Park Lane', 'Super Tax', 'Mayfair']
 					elif cfgdict['propName'] == 2: #american
-						tilename = ['Go', 'Mediterranean Avenue', 'Community Chest', 'Baltic Avenue', 'Income Tax', 'Reading Rainbow', 'Oriental Avenue', 'Chance', 'Vermont Avenue', 'Connecticut Avenue', 'Jail', 'St. Charles Place', 'Electric Company', 'States Avenue', 'States Avenue', 'Pennsylvania Railroad', 'St. James Place', 'Community Chest', 'Tennessee Avenue', 'New York Avenue', 'Free Parking', 'Kentucky Avenue', 'Chance', 'Indiana Avenue', 'Illinois Avenue', 'B&O Railroad', 'Atlantic Avenue', 'Ventnor Avenue', 'Water Works', 'Marvin Gardens', 'Go To Jail', 'Pacific Avenue', 'North Carolina Avenue', 'Community Chest', 'Pennsylvania Avenue', 'Short Line', 'Chance', 'Park Place', 'Luxury Tax', 'Boardwalk']
+						tilename = ['Go', 'Mediterranean Avenue', 'Community Chest', 'Baltic Avenue', 'Income Tax', 'Reading Rainbow', 'Oriental Avenue', 'Chance', 'Vermont Avenue', 'Connecticut Avenue', 'Jail', 'St. Charles Place', 'Electric Company', 'States Avenue', 'Virginia Avenue', 'Pennsylvania Railroad', 'St. James Place', 'Community Chest', 'Tennessee Avenue', 'New York Avenue', 'Free Parking', 'Kentucky Avenue', 'Chance', 'Indiana Avenue', 'Illinois Avenue', 'B&O Railroad', 'Atlantic Avenue', 'Ventnor Avenue', 'Water Works', 'Marvin Gardens', 'Go To Jail', 'Pacific Avenue', 'North Carolina Avenue', 'Community Chest', 'Pennsylvania Avenue', 'Short Line', 'Chance', 'Park Place', 'Luxury Tax', 'Boardwalk']
 					elif cfgdict['propName'] == 3: #custom
 						tilename = ['','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','']
 						for x in range(40):
@@ -954,15 +956,6 @@ class Monopoly:
 					await self.bot.say('You own this property already.')
 				elif ismortgaged[tile[p]] == 1:
 					await self.bot.say('This property is mortgaged.')
-				elif ownedby[tile[p]] > 0: #pay rent
-					if monopolytest(tile[p], 'm') and numhouse[tile[p]] == 0:
-						bal[p] -= 2*(rentprice[tile[p]*6+numhouse[tile[p]]])
-						bal[ownedby[tile[p]]] += 2*(rentprice[tile[p]*6+numhouse[tile[p]]])
-						await self.bot.say('You paid $'+str(2*(rentprice[tile[p]*6+numhouse[tile[p]]]))+' of rent to '+name[ownedby[tile[p]]]+'. You now have $'+str(bal[p])+'. '+name[ownedby[tile[p]]]+' now has $'+str(bal[ownedby[tile[p]]])+'.')
-					else:
-						bal[p] -= rentprice[tile[p]*6+numhouse[tile[p]]]
-						bal[ownedby[tile[p]]] += rentprice[tile[p]*6+numhouse[tile[p]]]
-						await self.bot.say('You paid $'+str(rentprice[tile[p]*6+numhouse[tile[p]]])+' of rent to '+name[ownedby[tile[p]]]+'. You now have $'+str(bal[p])+'. '+name[ownedby[tile[p]]]+' now has $'+str(bal[ownedby[tile[p]]])+'.')
 				elif ownedby[tile[p]] > 0 and rentprice[tile[p]] == -1: #rr and utilities
 					if tile[p] in (12, 28): #utility
 						if ownedby[12] == ownedby[28]: #own both
@@ -986,6 +979,15 @@ class Monopoly:
 						bal[p] -= rrprice[rr]
 						bal[ownedby[tile[p]]] += rrprice[rr]
 						await self.bot.say('You paid $'+str(rrprice[rr])+' of rent to '+name[ownedby[tile[p]]]+'. You now have $'+str(bal[p])+'. '+name[ownedby[tile[p]]]+' now has $'+str(bal[ownedby[tile[p]]])+'.')
+				elif ownedby[tile[p]] > 0: #pay rent
+					if monopolytest(tile[p], 'm') and numhouse[tile[p]] == 0:
+						bal[p] -= 2*(rentprice[tile[p]*6+numhouse[tile[p]]])
+						bal[ownedby[tile[p]]] += 2*(rentprice[tile[p]*6+numhouse[tile[p]]])
+						await self.bot.say('You paid $'+str(2*(rentprice[tile[p]*6+numhouse[tile[p]]]))+' of rent to '+name[ownedby[tile[p]]]+'. You now have $'+str(bal[p])+'. '+name[ownedby[tile[p]]]+' now has $'+str(bal[ownedby[tile[p]]])+'.')
+					else:
+						bal[p] -= rentprice[tile[p]*6+numhouse[tile[p]]]
+						bal[ownedby[tile[p]]] += rentprice[tile[p]*6+numhouse[tile[p]]]
+						await self.bot.say('You paid $'+str(rentprice[tile[p]*6+numhouse[tile[p]]])+' of rent to '+name[ownedby[tile[p]]]+'. You now have $'+str(bal[p])+'. '+name[ownedby[tile[p]]]+' now has $'+str(bal[ownedby[tile[p]]])+'.')
 				elif ownedby[tile[p]] == -1: #other spaces
 					if tile[p] in (0, 20):
 						pass
