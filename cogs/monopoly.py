@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from __main__ import send_cmd_help
 from random import randint, shuffle
+from PIL import Image
 
 class Monopoly:
 	"""A fun game of monopoly for 2-8 people"""
@@ -135,6 +136,104 @@ class Monopoly:
 			houseprice = [-1, 30, -1, 30, -1, -1, 50, -1, 50, 50, -1, 100, -1, 100, 100, -1, 100, -1, 100, 100, -1, 150, -1, 150, 150, -1, 150, 150, -1, 150, -1, 150, 150, -1, 150, -1, -1, 200, -1, 200]
 			global autosave
 			autosave = ''
+
+			async def bprint():
+				def fill(i,color,x1,y1,x2,y2):
+					for x in range(x1,x2):
+						for y in range(y1,y2):
+							i.putpixel( (x, y), color )
+					return i
+				pcolor = [-1, (0,0,255,255), (255,0,0,255), (0,255,0,255), (255,255,0,255), (0,255,255,255), (255,140,0,255), (140,0,255,255), (255,0,255,255)]
+				img = Image.open('data/monopoly/img.png')
+				#OWNEDBY
+				for t in range(40):
+					if ownedby[t] > 0:
+						if 0 < t < 10:
+							img = fill(img,(0,0,0,255),(650-(t*50))-39,702,(650-(t*50))-10,735)
+							img = fill(img,pcolor[ownedby[t]],(650-(t*50))-37,702,(650-(t*50))-12,733)
+						elif 10 < t < 20:
+							img = fill(img,(0,0,0,255),16,(650-((t-10)*50))-39,50,(650-((t-10)*50))-10)
+							img = fill(img,pcolor[ownedby[t]],18,(650-((t-10)*50))-37,50,(650-((t-10)*50))-12)
+						elif 20 < t < 30:
+							img = fill(img,(0,0,0,255),(100+((t-20)*50))+11,16,(100+((t-20)*50))+41,50)
+							img = fill(img,pcolor[ownedby[t]],(100+((t-20)*50))+13,18,(100+((t-20)*50))+39,50)
+						elif 30 < t < 40:
+							img = fill(img,(0,0,0,255),702,(100+((t-30)*50))+11,736,(100+((t-30)*50))+41)
+							img = fill(img,pcolor[ownedby[t]],702,(100+((t-30)*50))+13,734,(100+((t-30)*50))+39)
+				#TILE
+				for t in range(1,num+1):
+					if tile[t] == 0:
+						img = fill(img,(0,0,0,255),(12*(t-1))+604,636,(12*(t-1))+614,646)
+						img = fill(img,pcolor[t],(12*(t-1))+605,637,(12*(t-1))+613,645)
+					elif 0 < tile[t] < 10:
+						if t < 5:
+							img = fill(img,(0,0,0,255),((650-(tile[t]*50))-47)+(12*(t-1)),636,((650-(tile[t]*50))-37)+(12*(t-1)),646)
+							img = fill(img,pcolor[t],((650-(tile[t]*50))-46)+(12*(t-1)),637,((650-(tile[t]*50))-38)+(12*(t-1)),645)
+						else:
+							img = fill(img,(0,0,0,255),((650-(tile[t]*50))-47)+(12*(t-1)),648,((650-(tile[t]*50))-37)+(12*(t-1)),658)
+							img = fill(img,pcolor[t],((650-(tile[t]*50))-46)+(12*(t-1)),649,((650-(tile[t]*50))-38)+(12*(t-1)),657)
+					elif tile[t] == 10:
+						img = fill(img,(0,0,0,255),106,(12*(t-1))+604,116,(12*(t-1))+614)
+						img = fill(img,pcolor[t],107,(12*(t-1))+605,115,(12*(t-1))+613)
+					elif 10 < tile[t] < 20:
+						if t < 5:
+							img = fill(img,(0,0,0,255),106,((650-((tile[t]-10)*50))-47)+(12*(t-1)),116,((650-((tile[t]-10)*50))-37)+(12*(t-1)))
+							img = fill(img,pcolor[t],107,((650-((tile[t]-10)*50))-46)+(12*(t-1)),115,((650-((tile[t]-10)*50))-38)+(12*(t-1)))
+						else:
+							img = fill(img,(0,0,0,255),94,((650-((tile[t]-10)*50))-47)+(12*(t-1)),104,((650-((tile[t]-10)*50))-37)+(12*(t-1)))
+							img = fill(img,pcolor[t],95,((650-((tile[t]-10)*50))-46)+(12*(t-1)),103,((650-((tile[t]-10)*50))-38)+(12*(t-1)))
+					elif tile[t] == 20:
+						img = fill(img,(0,0,0,255),138-(12*(t-1)),106,148-(12*(t-1)),116)
+						img = fill(img,pcolor[t],139-(12*(t-1)),107,147-(12*(t-1)),115)
+					elif 20 < tile[t] < 30:
+						if t < 5:
+							img = fill(img,(0,0,0,255),((100+((tile[t]-20)*50))-47)+(12*(t-1)),106,((100+((tile[t]-20)*50))-37)+(12*(t-1)),116)
+							img = fill(img,pcolor[t],((100+((tile[t]-20)*50))-46)+(12*(t-1)),107,((100+((tile[t]-20)*50))-38)+(12*(t-1)),115)
+						else:
+							img = fill(img,(0,0,0,255),((100+((tile[t]-20)*50))-47)+(12*(t-1)),94,((100+((tile[t]-20)*50))-37)+(12*(t-1)),104)
+							img = fill(img,pcolor[t],((100+((tile[t]-20)*50))-46)+(12*(t-1)),95,((100+((tile[t]-20)*50))-38)+(12*(t-1)),103)
+					elif tile[t] == 30:
+						img = fill(img,(0,0,0,255),636,138-(12*(t-1)),646,148-(12*(t-1)))
+						img = fill(img,pcolor[t],637,139-(12*(t-1)),645,147-(12*(t-1)))
+					elif 30 < tile[t] < 40:
+						if t < 5:
+							img = fill(img,(0,0,0,255),636,((100+((tile[t]-30)*50))-47)+(12*(t-1)),646,((100+((tile[t]-30)*50))-37)+(12*(t-1)))
+							img = fill(img,pcolor[t],637,((100+((tile[t]-30)*50))-46)+(12*(t-1)),635,((100+((tile[t]-30)*50))-38)+(12*(t-1)))
+						else:
+							img = fill(img,(0,0,0,255),648,((100+((tile[t]-30)*50))-47)+(12*(t-1)),658,((100+((tile[t]-30)*50))-37)+(12*(t-1)))
+							img = fill(img,pcolor[t],649,((100+((tile[t]-30)*50))-46)+(12*(t-1)),657,((100+((tile[t]-30)*50))-38)+(12*(t-1)))
+				#NUMHOUSE
+				for t in range(40):
+					if numhouse[t] == 5:
+						if 0 < t < 10:
+							img = fill(img,(0,0,0,255),(650-(t*50))-33,606,(650-(t*50))-15,614)
+							img = fill(img,(255,0,0,255),(650-(t*50))-32,607,(650-(t*50))-16,613)
+						elif 10 < t < 20:			
+							img = fill(img,(0,0,0,255),138,(650-((t-10)*50))-33,146,(650-((t-10)*50))-17)
+							img = fill(img,(255,0,0,255),139,(650-((t-10)*50))-32,145,(650-((t-10)*50))-18)
+						elif 20 < t < 30:
+							img = fill(img,(0,0,0,255),(100+((t-20)*50))+17,138,(100+((t-20)*50))+35,146)
+							img = fill(img,(255,0,0,255),(100+((t-20)*50))+18,139,(100+((t-20)*50))+34,145)
+						elif 30 < t < 40:
+							img = fill(img,(0,0,0,255),606,(100+((t-30)*50))+17,614,(100+((t-30)*50))+35)
+							img = fill(img,(255,0,0,255),607,(100+((t-30)*50))+18,613,(100+((t-30)*50))+34)
+					elif numhouse[t] > 0:
+						for tt in range(numhouse[t]):
+							if 0 < t < 10:
+								img = fill(img,(0,0,0,255),((650-(t*50))-47)+(tt*12),606,((650-(t*50))-37)+(tt*12),614)
+								img = fill(img,(0,255,0,255),((650-(t*50))-46)+(tt*12),607,((650-(t*50))-38)+(tt*12),613)
+							elif 10 < t < 20:
+								img = fill(img,(0,0,0,255),138,((650-((t-10)*50))-47)+(tt*12),146,((650-((t-10)*50))-37)+(tt*12))
+								img = fill(img,(0,255,0,255),139,((650-((t-10)*50))-46)+(tt*12),145,((650-((t-10)*50))-38)+(tt*12))
+							elif 20 < t < 30:
+								img = fill(img,(0,0,0,255),((100+((t-20)*50))+39)-(tt*12),138,((100+((t-20)*50))+49)-(tt*12),146)
+								img = fill(img,(0,255,0,255),((100+((t-20)*50))+40)-(tt*12),139,((100+((t-20)*50))+48)-(tt*12),145)
+							elif 30 < t < 40:
+								img = fill(img,(0,0,0,255),606,((100+((t-30)*50))+39)-(tt*12),614,((100+((t-30)*50))+49)-(tt*12))
+								img = fill(img,(0,255,0,255),607,((100+((t-30)*50))+40)-(tt*12),613,((100+((t-30)*50))+48)-(tt*12))
+				#END
+				img.save('data/monopoly/temp.png')
+				await self.bot.send_file(channel, 'data/monopoly/temp.png')
 
 			def monopolytest(t,test): #tests if prop in monopoly or any properties in color group has houses
 				pga = [1, 6, 11, 16, 21, 26, 31, 37]
@@ -388,6 +487,7 @@ class Monopoly:
 						if ntotrade[tradeidn[a]] == 1:
 							ownedby[tradeidn[a]] = p
 						a += 1
+					await bprint()
 				await self.bot.say('Back to '+name[p]+'\'s turn')
 				
 			async def roll(): #rolls d1 and d2 (1-6) and prints if 'doubles'
@@ -581,9 +681,9 @@ class Monopoly:
 							await self.bot.say('Select one of the options')
 
 			async def house(): #buy/sell houses
-				doprint = False
 				io = 0
 				while io == 0:
+					doprint = False
 					hid = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 					hs = [1, 6, 11, 16, 21, 26, 31, 37]
 					color = {1:'Brown',6:'Light Blue',11:'Pink',16:'Orange',21:'Red',26:'Yellow',31:'Green',37:'Dark Blue'}
@@ -678,6 +778,7 @@ class Monopoly:
 									else:
 										await self.bot.say('Select one of the options')
 					if doprint:
+						await bprint()
 						await self.bot.say('You now have $'+str(bal[p]))
 
 			async def cc(): #get a cc card
@@ -686,6 +787,7 @@ class Monopoly:
 				if ccorder[ccn] == 0:
 					tile[p] = 0
 					bal[p] += 200
+					await bprint()
 					await self.bot.say('You now have $'+str(bal[p]))
 				elif ccorder[ccn] == 1:
 					bal[p] += 200
@@ -705,6 +807,7 @@ class Monopoly:
 				elif ccorder[ccn] == 5:
 					tile[p] = 10
 					injail[p] = True
+					await bprint()
 					global wd
 					wd = 0
 				elif ccorder[ccn] == 6:
@@ -744,6 +847,7 @@ class Monopoly:
 				if chanceorder[chancen] == 0:
 					tile[p] = 0
 					bal[p] += 200
+					await bprint()
 					await self.bot.say('You now have $'+str(bal[p]))
 				elif chanceorder[chancen] == 1:
 					if tile[p] > 24:
@@ -766,6 +870,7 @@ class Monopoly:
 						bal[p] += 200
 						await self.bot.say('You passed go, you now have $'+str(bal[p]))
 						tile[p] = 12 
+					await bprint()
 					await self.bot.say('You are now at '+tilename[tile[p]])
 					if ownedby[tile[p]] == 0 and bal[p] >= pricebuy[tile[p]]:
 						await self.bot.say('Would you like to buy '+tilename[tile[p]]+' for $'+str(pricebuy[tile[p]])+'? (y/n) You have $'+str(bal[p])+'.')
@@ -807,6 +912,7 @@ class Monopoly:
 						bal[p] += 200
 						await self.bot.say('You passed go, you now have $'+str(bal[p]))
 						tile[p] = 5
+					await bprint()
 					await self.bot.say('You are now at '+tilename[tile[p]])
 					rr = 0
 					if ownedby[5] == ownedby[tile[p]]:
@@ -824,6 +930,7 @@ class Monopoly:
 					bal[p] += 50
 					await self.bot.say('You now have $'+str(bal[p]))
 				elif chanceorder[chancen] == 6:
+					goojf[p] += 1
 					if goojf[p] == 1:
 						await self.bot.say('You now have '+str(goojf[p])+' get out of jail free card.')
 					else:
@@ -833,6 +940,7 @@ class Monopoly:
 					await landnd()
 				elif chanceorder[chancen] == 8:
 					tile[p] = 10
+					await bprint()
 					injail[p] = True
 					global wd
 					wd = 0
@@ -846,18 +954,42 @@ class Monopoly:
 						bal[p] += 200
 						await self.bot.say('You passed go, you now have $'+str(bal[p]))
 					tile[p] = 5
-					rr = 0
-					if ownedby[5] == ownedby[tile[p]]:
-						rr += 1
-					if ownedby[15] == ownedby[tile[p]]:
-						rr += 1
-					if ownedby[25] == ownedby[tile[p]]:
-						rr += 1
-					if ownedby[35] == ownedby[tile[p]]:
-						rr += 1
-					bal[p] -= rrprice[rr]
-					bal[ownedby[tile[p]]] += rrprice[rr]
-					await self.bot.say('You paid $'+str(rrprice[rr])+' of rent to '+name[ownedby[tile[p]]]+'. You now have $'+str(bal[p])+'. '+name[ownedby[tile[p]]]+' now has $'+str(bal[ownedby[tile[p]]])+'.')
+					await bprint()
+					if ownedby[5] == 0 and bal[p] >= pricebuy[5]:
+						await self.bot.say('Would you like to buy '+tilename[5]+' for $'+str(pricebuy[5])+'? (y/n) You have $'+str(bal[p])+'.'))
+						a = 0
+						while a = 0:
+							response = await self.bot.wait_for_message(timeout=60, author=id[p], channel=channel)
+							response = response.content
+							if response == 'y': #buy property
+								bal[p] -= pricebuy[5]
+								ownedby[5] = p
+								await self.bot.say(name[p]+' now owns '+tilename[5]+' and has $'+str(bal[p]))
+								a = 1
+							elif response == 'n': #pass on property
+								a = 1
+							else:
+								await self.bot.say('Please select y or n')
+								continue
+					elif ownedby[5] == 0 and bal[p] < pricebuy[5]:
+						await self.bot.say('You cannot afford '+tilename[5]+', you only have $'+str(bal[p])+' of $'+str(pricebuy[5])+'.')
+					elif ownedby[5] == p:
+						await self.bot.say('You own this property already.')
+					elif ismortgaged[5] == 1:
+						await self.bot.say('This property is mortgaged.')
+					else:
+						rr = 0
+						if ownedby[5] == ownedby[5]:
+							rr += 1
+						if ownedby[15] == ownedby[5]:
+							rr += 1
+						if ownedby[25] == ownedby[5]:
+							rr += 1
+						if ownedby[35] == ownedby[5]:
+							rr += 1
+						bal[p] -= rrprice[rr]
+						bal[ownedby[5]] += rrprice[rr]
+						await self.bot.say('You paid $'+str(rrprice[rr])+' of rent to '+name[ownedby[5]]+'. You now have $'+str(bal[p])+'. '+name[ownedby[5]]+' now has $'+str(bal[ownedby[5]])+'.')
 				elif chanceorder[chancen] == 12:
 					tile[p] = 39
 					await cchanceland()
@@ -879,6 +1011,7 @@ class Monopoly:
 					chancen = 0
 
 			async def cchanceland(): #reduced land() code for cchance moves
+				await bprint()
 				if ownedby[tile[p]] == 0 and bal[p] >= pricebuy[tile[p]]:
 					await self.bot.say('Would you like to buy '+tilename[tile[p]]+' for $'+str(pricebuy[tile[p]])+'? (y/n) You have $'+str(bal[p])+'.')
 					a = 0
@@ -888,6 +1021,7 @@ class Monopoly:
 						if response == 'y': #buy property
 							bal[p] -= pricebuy[tile[p]]
 							ownedby[tile[p]] = p
+							await bprint()
 							await self.bot.say(name[p]+' now owns '+tilename[tile[p]]+' and has $'+str(bal[p]))
 							a = 1
 						elif response == 'n': #pass on property
@@ -933,6 +1067,7 @@ class Monopoly:
 				await landnd()
 
 			async def landnd(): #affecting properties
+				await bprint()
 				await self.bot.say(name[p]+' landed at '+tilename[tile[p]])
 				if ownedby[tile[p]] == 0 and bal[p] >= pricebuy[tile[p]]: #unowned and can afford
 					await self.bot.say('Would you like to buy '+tilename[tile[p]]+' for $'+str(pricebuy[tile[p]])+'? (y/n) You have $'+str(bal[p])+'.')
@@ -943,6 +1078,7 @@ class Monopoly:
 						if response == 'y': #buy property
 							bal[p] -= pricebuy[tile[p]]
 							ownedby[tile[p]] = p
+							await bprint()
 							await self.bot.say(name[p]+' now owns '+tilename[tile[p]]+' and has $'+str(bal[p]))
 							a = 1
 						elif response == 'n': #pass on property
@@ -1002,6 +1138,7 @@ class Monopoly:
 						tile[p] = 10
 						global wd
 						wd = 0
+						await bprint()
 						await self.bot.say('You are now in jail!')
 					elif tile[p] == 4:
 						bal[p] -= 200
@@ -1017,6 +1154,7 @@ class Monopoly:
 				global tile
 				global bal
 				nod = 0
+				await bprint()
 				await self.bot.say(name[p]+'\'s turn!')
 				if bal[p] < 0:
 					await debt()
@@ -1056,7 +1194,7 @@ class Monopoly:
 								await house()
 							elif choice == 's': #print game save message
 								global autosave
-								await self.bot.say('Copy the following, put it in a text file called "save.txt", and relaunch monopoly.py to restart from here.\n\n'+autosave+'\n')
+								await self.bot.say('Copy the following, put it in a text file called "save.txt", and relaunch monopoly.py to restart from here.\n\n```'+autosave+'```\n')
 				r = 1
 				while r == 1 and alive[p]:
 					await self.bot.say('Type t to trade, m to mortgage, h to manage houses, or d when done.')
@@ -1103,8 +1241,10 @@ class Monopoly:
 			await self.bot.say('\nDebug information\n')
 			await debug()
 			await self.bot.say('\nSave information\n\n'+autosave)
+		except asyncio.TimeoutError:
+			await self.bot.say('You took too long. Shutting down.\nSave info:\n'+autosave)
 		except:
-			#await self.bot.say(autosave)
+			await self.bot.say(autosave)
 			raise
 
 def setup(bot):
