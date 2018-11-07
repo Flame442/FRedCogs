@@ -914,18 +914,42 @@ class Monopoly:
 						tile[p] = 5
 					await bprint()
 					await self.bot.say('You are now at '+tilename[tile[p]])
-					rr = 0
-					if ownedby[5] == ownedby[tile[p]]:
-						rr += 1
-					if ownedby[15] == ownedby[tile[p]]:
-						rr += 1
-					if ownedby[25] == ownedby[tile[p]]:
-						rr += 1
-					if ownedby[35] == ownedby[tile[p]]:
-						rr += 1
-					bal[p] -= rrprice[rr]
-					bal[ownedby[tile[p]]] += rrprice[rr]
-					await self.bot.say('You paid $'+str(rrprice[rr])+' of rent to '+name[ownedby[tile[p]]]+'. You now have $'+str(bal[p])+'. '+name[ownedby[tile[p]]]+' now has $'+str(bal[ownedby[tile[p]]])+'.')
+					if ownedby[tile[p]] == 0 and bal[p] >= pricebuy[tile[p]]:
+						await self.bot.say('Would you like to buy '+tilename[5]+' for $'+str(pricebuy[5])+'? (y/n) You have $'+str(bal[p])+'.')
+						a = 0
+						while a == 0:
+							response = await self.bot.wait_for_message(timeout=60, author=id[p], channel=channel)
+							response = response.content
+							if response == 'y': #buy property
+								bal[p] -= pricebuy[tile[p]]
+								ownedby[tile[p]] = p
+								await bprint()
+								await self.bot.say(name[p]+' now owns '+tilename[5]+' and has $'+str(bal[p]))
+								a = 1
+							elif response == 'n': #pass on property
+								a = 1
+							else:
+								await self.bot.say('Please select y or n')
+								continue
+					elif ownedby[tile[p]] == 0 and bal[p] < pricebuy[tile[p]]:
+						await self.bot.say('You cannot afford '+tilename[tile[p]]+', you only have $'+str(bal[p])+' of $'+str(pricebuy[tile[p]])+'.')
+					elif ownedby[tile[p]] == p:
+						await self.bot.say('You own this property already.')
+					elif ismortgaged[tile[p]] == 1:
+						await self.bot.say('This property is mortgaged.')
+					else:
+						rr = 0
+						if ownedby[5] == ownedby[tile[p]]:
+							rr += 1
+						if ownedby[15] == ownedby[tile[p]]:
+							rr += 1
+						if ownedby[25] == ownedby[tile[p]]:
+							rr += 1
+						if ownedby[35] == ownedby[tile[p]]:
+							rr += 1
+						bal[p] -= rrprice[rr]*2
+						bal[ownedby[tile[p]]] += rrprice[rr]*2
+						await self.bot.say('You paid $'+str(rrprice[rr]*2)+' of rent to '+name[ownedby[tile[p]]]+'. You now have $'+str(bal[p])+'. '+name[ownedby[tile[p]]]+' now has $'+str(bal[ownedby[tile[p]]])+'.')
 				elif chanceorder[chancen] == 5:
 					bal[p] += 50
 					await self.bot.say('You now have $'+str(bal[p]))
@@ -956,14 +980,15 @@ class Monopoly:
 					tile[p] = 5
 					await bprint()
 					if ownedby[5] == 0 and bal[p] >= pricebuy[5]:
-						await self.bot.say('Would you like to buy '+tilename[5]+' for $'+str(pricebuy[5])+'? (y/n) You have $'+str(bal[p])+'.'))
+						await self.bot.say('Would you like to buy '+tilename[5]+' for $'+str(pricebuy[5])+'? (y/n) You have $'+str(bal[p])+'.')
 						a = 0
-						while a = 0:
+						while a == 0:
 							response = await self.bot.wait_for_message(timeout=60, author=id[p], channel=channel)
 							response = response.content
 							if response == 'y': #buy property
 								bal[p] -= pricebuy[5]
 								ownedby[5] = p
+								await bprint()
 								await self.bot.say(name[p]+' now owns '+tilename[5]+' and has $'+str(bal[p]))
 								a = 1
 							elif response == 'n': #pass on property
