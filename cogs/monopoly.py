@@ -501,6 +501,7 @@ class Monopoly:
 					await self.bot.say(name[p]+' rolled a '+str(d1)+' and a '+str(d2))
 
 			async def jail(): #turn code when in jail
+				global wd, d1, d2
 				await self.bot.say(name[p]+' is in jail!')
 				if jailturn[p] == -1: #just entered jail
 					jailturn[p] = 0
@@ -525,6 +526,7 @@ class Monopoly:
 					if choice == 'r' and not jailturn[p] == 4:
 						await roll()
 						if d1 == d2:
+							wd = 1
 							await self.bot.say('You rolled out of jail.')
 							jailturn[p] = -1
 							injail[p] = False
@@ -541,6 +543,8 @@ class Monopoly:
 						jailturn[p] = -1
 						injail[p] = False
 						await roll()
+						if d1 == d2:
+							wd = 1
 						await land()
 						jr = 1
 					elif choice == 'b' and bal[p] < 50:
@@ -563,6 +567,8 @@ class Monopoly:
 							await debt()
 							if alive[p]:
 								await roll()
+								if d1 == d2:
+									wd = 1
 								await land()
 							i = 2
 							jr = 1
@@ -572,6 +578,8 @@ class Monopoly:
 						jailturn[p] = -1
 						injail[p] = False
 						await roll()
+						if d1 == d2:
+							wd = 1
 						await land()
 						jr = 1
 					else:
@@ -700,11 +708,11 @@ class Monopoly:
 								hi += 1
 					a = 1
 					await self.bot.say('Select the color groups to buy houses')
-					hold = 'id numh price name'
+					hold = 'id numh price name\n'
 					while a < hi:
 						hold += '{:2} {:4} {:5d} {}'.format(a,numhouse[hid[a]],houseprice[hid[a]],color[hid[a]])+'\n'
 						a += 1
-					await self.bot.say('```'+hold.strip()+'```')
+					await self.bot.say('```'+hold.strip()+'\nYou have $'+str(bal[p])+'```')
 					i = 0
 					while i == 0:
 						t = await self.bot.wait_for_message(timeout=60, author=id[p], channel=channel)
@@ -769,7 +777,7 @@ class Monopoly:
 									ttt = ttt.content
 									if ttt == 'y':
 										for x in hdic[hid[t]]:
-											numhouse[x] = ttt
+											numhouse[x] = tt
 										bal[p] -= amount
 										doprint = True
 										i = 3
@@ -1117,7 +1125,7 @@ class Monopoly:
 					await self.bot.say('You own this property already.')
 				elif ismortgaged[tile[p]] == 1:
 					await self.bot.say('This property is mortgaged.')
-				elif ownedby[tile[p]] > 0 and rentprice[tile[p]] == -1: #rr and utilities
+				elif ownedby[tile[p]] > 0 and rentprice[tile[p]*6] == -1: #rr and utilities
 					if tile[p] in (12, 28): #utility
 						if ownedby[12] == ownedby[28]: #own both
 							bal[p] -= ((d1 + d2)*10)
