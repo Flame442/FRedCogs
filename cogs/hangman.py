@@ -4,13 +4,14 @@ from __main__ import send_cmd_help
 import os
 from random import randint
 
-class hangman:
+class Hangman:
 	"""Play hangman with the bot"""
 	def __init__(self, bot):
 		self.bot = bot
 
 	@commands.group(pass_context=True, no_pm=True)
 	async def hangman(self, t):
+		"""Play hangman with the bot"""
 		if t.invoked_subcommand is None:
 			await send_cmd_help(t)
 			
@@ -40,23 +41,17 @@ class hangman:
 		await self.bot.say("```"+y+"```")
 
 	@hangman.command(name="sellist", pass_context=True)
-	async def _sellist_hangman(self, t):
-		"""Select a file to use as the wordlist"""
-		author = t.message.author
-		await self.bot.say("Pick a wordlist")
-		response = await self.bot.wait_for_message(timeout=15, author=author, channel=t.message.channel)
-		if response is None:
-			return await self.bot.say("Canceling selection. You took too long.")
-		else:
-			try:
-				x = open("C:\\biggiecheese\\data\\hangman\\"+response.content+".txt")
-			except:
-				await self.bot.say("Invalid wordlist")
+	async def _sellist_hangman(self, t, response: str):
+		try:
+			x = open("C:\\biggiecheese\\data\\hangman\\"+response+".txt")
 			global wordlist
 			wordlist = []
 			for line in x:
 				wordlist.append(line.strip().lower())
 			await self.bot.say("Wordlist changed.")
+		except:
+			await self.bot.say("Invalid wordlist")
+			raise
 
 	@hangman.command(name="play", pass_context=True)
 	async def _play_hangman(self, t):
@@ -111,7 +106,7 @@ class hangman:
 					end = 1
 
 def setup(bot):
-	bot.add_cog(hangman(bot))
+	bot.add_cog(Hangman(bot))
 	global man #hangman picture
 	man = ['\
     ___    \n\
