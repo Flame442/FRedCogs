@@ -1,7 +1,7 @@
 import discord, re
 from discord.ext import commands
 
-class wordstats:
+class WordStats:
 	"""Tracks commonly written words"""
 	def __init__(self, bot):
 		self.bot = bot
@@ -26,6 +26,7 @@ class wordstats:
 						if word:
 							wordlist.append(word)
 		'''Count/sort wordlist'''
+		num = len(wordlist)
 		for word in wordlist:
 			try:
 				worddic[word] += 1
@@ -41,7 +42,7 @@ class wordstats:
 				smallresult +=str(worddic[word])+' '+str(word)+'\n'
 				n += 1
 			result += str(worddic[word])+' '+str(word)+'\n'
-		await self.bot.say('The 30 most common words that '+mention+' has said are:\n```'+smallresult.rstrip()+'```')
+		await self.bot.say('Out of '+str(num)+' words, the 30 most common words that '+mention+' has said are:\n```'+smallresult.rstrip()+'```')
 		with open('data/wordstats/result.txt', 'w') as f:
 			f.write(result)
 
@@ -50,7 +51,7 @@ class wordstats:
 		if t.author.id != self.bot.user.id:
 			message = t.content.lower()
 			'''epic'''
-			if message.find('epic') != -1:
+			if message.find('epic') != -1 and message.find('unepic') == -1:
 				with open('data/wordstats/epic.txt') as f:
 					for line in f:
 						num = int(line)
@@ -61,12 +62,15 @@ class wordstats:
 			'''ok so basically'''
 			if message.find('ok so basically') != -1:
 				await self.bot.send_message(t.channel, content='I\'m monkey!')
+			'''darn'''
+			if message.find('darn') != -1:
+				await self.bot.send_message(t.channel, content='What a *darn* shame!')
 			'''all text'''
-			if t.channel.id != '500150094184841247' and t.channel.id != '495722437997232148':
+			if t.channel.id != '500150094184841247' and t.channel.id != '495722437997232148' and t.channel.id != '389833321682698240' and t.server.id != '499751595500896257':
 				with open('data/wordstats/all.txt','a') as f:
 					f.write(str(t.author.id)+' | '+str(re.sub(r'[^a-zA-Z ]','',message))+'\n')
 
 def setup(bot):
-	n = wordstats(bot)
+	n = WordStats(bot)
 	bot.add_listener(n.run, "on_message")
 	bot.add_cog(n)
